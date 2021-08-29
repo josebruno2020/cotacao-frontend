@@ -64,7 +64,10 @@ export default {
     },
     methods: {
         cotarFrete() {
-            console.log("MODEL: "+this.model);
+            let exp = new RegExp(/[a-z]/);
+            if(exp.test(this.model.valor_pedido)) {
+                return;
+            }
             http.put(apiRoutes.cotacao, this.model).then((res) => {
                 this.result = true;
                 this.cotacoes = res.data;

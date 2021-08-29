@@ -68,7 +68,9 @@ export default {
             })
         },
         cadastrarCotacao() {
-            console.log(this.model);
+            if(!this.validateData()) {
+                return;
+            }
             http.post(apiRoutes.cotacao, this.model).then(res => {
                 this.model = new CotacaoFrete();
                 this.alertType = 'success';
@@ -90,9 +92,21 @@ export default {
                 }, 2000)
             })
 
-
-     
-        }
+        },
+        validateData() {
+            let exp = new RegExp(/[a-z]/);
+            if(exp.test(this.model.percentual_cotacao) || exp.test(this.model.valor_extra)) {
+                this.alertType = 'danger';
+                this.alertMessage = 'Porcentagem de Cotação e Valor extra devem ser um número';
+                setTimeout(() =>{
+                    this.alertMessage = '';
+                }, 5000)
+                return false;
+            }
+            this.model.percentual_cotacao = this.model.percentual_cotacao.replace(',', '.');
+            this.model.valor_extra = this.model.valor_extra.replace(',', '.');
+            return true;
+        },
     }
 }
 </script>
